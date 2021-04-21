@@ -4,13 +4,49 @@
 2021/03/02
 """
 
-from flask import Flask, render_template, request, redirect, url_for, flash
-from forms import RegistrationForm, LoginForm
+from flask import Flask, session, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from wtforms import Form, StringField, PasswordField, SubmitField, validators
+from flask_login import UserMixin
+import os
 
+# create the app
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SESSION_TYPE'] = 'filesystem'
 
-DB_FILE = "./data/db.txt"
 
+# create a database to store user information
+db = SQLAlchemy()
+DB_NAME = 'database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+db.init_app(app)
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25), unique=True)
+    password = db.Column(db.String(25))
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+with app.app_context():
+    db.create_all()
+
+DB_FILE = "Python Project/data/story.txt"
+
+class RegistrationForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    psw = PasswordField('Password', [validators.DataRequired(), validators.EqualTo('confirm', message='password must match')])
+    confirm = PasswordField('Repeat Password')
+    submit = SubmitField('Register')
+
+class LoginForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    psw = PasswordField('Password', [validators.DataRequired()])
+    submit = SubmitField('Log in')
+
+    
 @app.route('/')
 def index():
     """
@@ -52,23 +88,28 @@ def save():
     # go back to index page
     return redirect(url_for('create', name='test'))
 
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     """Create a registration page"""
     form = RegistrationForm(request.form)
-    return render_template('register.html', form = form)
     if request.method == 'POST' and form.validate():
         flash('The account is created')
+        new_user = User(username=form.username.data, password=form.psw.data)
+        db.session.add(new_user)
+        db.session.commit()
         return redirect(url_for('login'))
+    return render_template('register.html', form = form)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     """Create a login page"""
-    form = LoginForm()
-   
+    form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
-        return render_template('create.html')
-
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if user.password == form.psw.data:
+                return redirect(url_for('create'))
     return render_template('login.html', form = form)
 
 

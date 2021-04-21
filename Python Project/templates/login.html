@@ -15,7 +15,7 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
-button {
+.loginbtn {
   background-color: #4ca0af;
   color: white;
   padding: 14px 20px;
@@ -32,18 +32,17 @@ button {
 </style>
 </head>
 <body>
-
-<h2>Login Form</h2>
-<form method='POST' action=''></form>
-
+<form method='POST' action=''>
   <div class="container">
+    <h2>Login Form</h2>
+    <hr>
     <label for="username"><b>Username</b></label>
     <input type="text" placeholder="Enter Username" name="username" required>
 
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
-        
-    <button type="submit">Login</button>
+    <hr>    
+    <input type="submit" class="loginbtn" value="Log in"/>
   </div>
 
   <div class="container" style="background-color:#f1f1f1">
