@@ -6,7 +6,7 @@
 
 from flask import Flask, session, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, AddForm
 from flask_login import UserMixin
 from datetime import datetime
 import os
@@ -32,12 +32,13 @@ class User(db.Model, UserMixin):
         return '<User %r>' % self.username
 
 class Sentences(db.Model):
+    __tablename__ = 'sentences'
     id = db.Column(db.Integer, primary_key=True)
-    sentence = db.Column(db.String(500))
+    sentence = db.Column(db.String(1000))
     pub_date = db.Column(db.DateTime)
 
     # Initializes the fields with entered data
-    def __init__(self, sentence): 
+    def __init__(self, sentence):
         self.sentence = sentence
         self.pub_date = datetime.now()
 
@@ -49,20 +50,20 @@ def index():
     """
     Index Page
     """
-    return render_template('index.html',
-            sentences=Sentences.query.order_by(Sentences.pub_date.desc()).all())
+    return render_template('index.html', sentences=Sentences.query.order_by(Sentences.pub_date.desc()).all())
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
     """
     page for creating the story
     """
-    if request.method == 'POST':
-        sentence = Sentences(request.form['sentence'])
+    form = AddForm(request.form)
+    if request.method == 'POST' and form.validate():
+        sentence = Sentences(sentence=form.sentence.data)
         db.session.add(sentence)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('create.html')
+    return render_template('create.html', form = form)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():

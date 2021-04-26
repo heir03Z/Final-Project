@@ -1,31 +1,48 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>page title</title>
-        <link href='/static/css/bootstrap.min.css' rel='stylesheet' />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.submitbtn {
+  background-color: #4ca0af;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.container {
+  padding: 16px;
+}
+
+</style>
     </head>
     <body>
-		<div class="container">
-            <div class="header">
-              <h3 class="text-muted">Story Creator</h3>
-            </div>
-            <hr/>
-			<form class="form-horizontal" action="{{ request.path }}" method="post"></form>
-              <div class="form-group">
-                <label for="sentence" class="col-lg-2 control-label">Sentence</label>
-                <div class="col-lg-2">
-                  <textarea class="form-control" name="sentence" placeholder="Type the next sentence..."></textarea>
-                </div>
-              </div>
-              </div>
-              <div class="form-group">
-                <div class="col-lg-offset-2 col-lg-2">
-                  <input type="submit" class="btn btn-primary" value="Add">
-                </div>
-              </div>
-            </form>
-          </div>
-        </body>
-      </html>
+		<form method='POST' action=''>
+			<div class="container">
+			  <h2>Story Creator</h2>
+			  <hr>
+			  <label for="sentence"><b>Sentence</b></label>
+			  <input type="text" placeholder="Type the next sentence..." name="sentence" required>
+			  <hr>    
+			  <input type="submit" class="submitbtn" value="Add"/>
+			</div>
+		</form>
+    </body>
+</html>
 
+	  
