@@ -1,50 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
-form {border: 3px solid #f1f1f1;}
 
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+body {font-family: Arial, Helvetica, sans-serif;}
+.image-container {
+  background-image: url("Python Project\books.jpg");
+  background-size: cover;
+  position: relative; 
+  height: 150px; 
+}
+
+.text {
+  background-color: white;
+  color: black;
+  font-size: 3vw; /* Responsive font size */
+  font-weight: bold;
+  margin: 0 auto; /* Center the text container */
+  padding: 10px;
+  width: 50%;
+  text-align: center; /* Center text */
+  position: absolute; /* Position text */
+  top: 50%; /* Position text in the middle */
+  left: 50%; /* Position text in the middle */
+  transform: translate(-50%, -50%); /* Position text in the middle */
+  mix-blend-mode: screen; /* This makes the cutout text possible */
 }
 
 .container {
-  padding: 16px;
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
 }
 
 </style>
   </head>
     <body>
-        <div class="container">
-            <div class="header">
-                <h3 class="text-muted">Story Creator</h3>
-            </div>
+      <div class="image-container">
+        <div class="text">Story Drive</div>
+      </div>
             <hr/>
             <h3>Would like to add a few sentences and create a story with us? <a href="{{ url_for('register') }}">Register Now</a></h3>
-            <table class="table">
-              <thead>
-                      <tr>
-                        <th>Story</th>
-                        <th>Post Time</th>
-                      </tr>
-              </thead>
-              <tbody>
+            <div class="container">>
                       {% for sentence in sentences %}
-                      <tr>
-                        <td>{{ sentence.sentence }}</td>
-                        <td>{{ sentence.pub_date }}</td>
-                      </tr>
+                        <p>{{ sentence.sentence }}</p>
+                        <span class='time-right'>{{ sentence.pub_date.strftime("%H:%M:%S %Y/%m/%d") }}</span>
                       {% endfor %}
-                    </tbody>
-                  </table>
-          </div>
+            </div>
     </body>
 </html>
    

@@ -50,7 +50,7 @@ def index():
     """
     Index Page
     """
-    return render_template('index.html', sentences=Sentences.query.order_by(Sentences.pub_date.desc()).all())
+    return render_template('index.html', sentences=Sentences.query.order_by(Sentences.pub_date.asc()).all())
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
