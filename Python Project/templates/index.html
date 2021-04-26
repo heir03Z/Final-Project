@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title></title>
+        <link href='/static/css/bootstrap.min.css' rel='stylesheet' />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h3 class="text-muted">Story Creator</h3>
+            </div>
+            <hr/>
+            <h3>Would like to add a few sentences and create a story with us? <a href="{{ url_for('register') }}">Register Now</a></h3>
+            <table class="table">
+        <thead>
+                <tr>
+                  <th>sentence</th>
+                  <th>When</th>
+                </tr>
+          </thead>
+          <tbody>
+                {% for sentence in sentences %}
+                <tr>
+                  <td>{{ sentence.sentence }}</td>
+                  <td>{{ sentence.pub_date.strftime("%H:%M:%S %d/%m/%Y") }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </body>
+      </html>
+   

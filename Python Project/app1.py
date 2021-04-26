@@ -6,8 +6,9 @@
 
 from flask import Flask, session, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from wtforms import Form, StringField, PasswordField, SubmitField, validators
+from forms import RegistrationForm, LoginForm
 from flask_login import UserMixin
+from datetime import datetime
 import os
 
 # create the app
@@ -30,71 +31,45 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return '<User %r>' % self.username
 
+class Sentences(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sentence = db.Column(db.String(500))
+    pub_date = db.Column(db.DateTime)
+
+    # Initializes the fields with entered data
+    def __init__(self, sentence): 
+        self.sentence = sentence
+        self.pub_date = datetime.now()
+
 with app.app_context():
     db.create_all()
-
-DB_FILE = "Python Project/data/story.txt"
-
-class RegistrationForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    psw = PasswordField('Password', [validators.DataRequired(), validators.EqualTo('confirm', message='password must match')])
-    confirm = PasswordField('Repeat Password')
-    submit = SubmitField('Register')
-
-class LoginForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    psw = PasswordField('Password', [validators.DataRequired()])
-    submit = SubmitField('Log in')
-
     
 @app.route('/')
 def index():
     """
     Index Page
     """
-
-
-    return render_template('index(2).html')
+    return render_template('index.html',
+            sentences=Sentences.query.order_by(Sentences.pub_date.desc()).all())
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
     """
     page for creating the story
     """
-    lines = []
-    with open(DB_FILE, 'r', encoding='utf8') as f:
-        for line in f:
-            lines.append(line.strip())
-
-    return render_template('create.html', lines=lines)
-
-
-@app.route('/save', methods=['POST'])
-def save():
-    """
-    save next sentence
-    """
-    f = request.form
-    sentence = f['sentence']
-
-    # strip heading and trailing blanks
-    sentence = sentence.strip()
-    print('====== new sentence:', sentence)
-
-    # append to file
-    with open(DB_FILE, 'a', encoding='utf8') as f:
-        f.write(sentence + '\n')
-
-    # go back to index page
-    return redirect(url_for('create', name='test'))
-
+    if request.method == 'POST':
+        sentence = Sentences(request.form['sentence'])
+        db.session.add(sentence)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('create.html')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     """Create a registration page"""
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
-        flash('The account is created')
+        flash('The account is created, please log in')
         new_user = User(username=form.username.data, password=form.psw.data)
         db.session.add(new_user)
         db.session.commit()
