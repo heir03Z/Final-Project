@@ -5,7 +5,7 @@ flask， falsk_sqlalchemy, wtforms, flask_login, datetime, os, pylint_flask_sqla
 
 ---
 
-Clone the two folders to your computer
+Clone the two folders to your computer by clicking on the green "Code" button on the top right corner and select the way you would like to clone the code. Then you can open the folders with your editor.
 
 ---
 	
