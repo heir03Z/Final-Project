@@ -72,6 +72,11 @@ a {
   <div class="container">
     <h1>Register</h1>
     <p>Please fill in this form to create an account.</p>
+    {%- for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+    {%- endfor %}
     <hr>
 
     <label for="username"><b>Username</b></label>
