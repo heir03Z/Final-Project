@@ -35,6 +35,11 @@ input[type=text], input[type=password] {
 <form method='POST' action=''>
   <div class="container">
     <h2>Login Form</h2>
+    {%- for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+    {%- endfor %}
     <hr>
     <label for="username"><b>Username</b></label>
     <input type="text" placeholder="Enter Username" name="username" required>
